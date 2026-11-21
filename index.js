@@ -22,10 +22,18 @@ export async function connectToMongoDB() {
 }
 
 const connectedClient = await connectToMongoDB();
+const database = connectedClient.db("bigbitedb");
+const users = database.collection("user")
 
 app.get('/', (req, res) => {
   res.send('Hello World!');
 });
+
+app.get('/users', async (req, res) => {
+  const cursor = users.find({});
+  const result = await cursor.toArray();
+  res.send(result);
+})
 
 app.listen(port, () => {
   console.log(`Example app listening on port ${port}`);
