@@ -1,6 +1,6 @@
 import express from 'express';
 import cors from 'cors'
-import { MongoClient } from 'mongodb';
+import { MongoClient, ObjectId } from 'mongodb';
 import 'dotenv/config'
 
 const app = express();
@@ -24,6 +24,7 @@ export async function connectToMongoDB() {
 const connectedClient = await connectToMongoDB();
 const database = connectedClient.db("bigbitedb");
 const users = database.collection("user")
+const menu = database.collection("menu")
 
 app.get('/', (req, res) => {
   res.send('Hello World!');
@@ -34,6 +35,25 @@ app.get('/users', async (req, res) => {
   const result = await cursor.toArray();
   res.send(result);
 })
+
+app.post('/menu',async (req, res) =>{
+  const menuItem = req.body;
+  const result = await menu.insertOne(menuItem);
+  res.send(result)
+})
+
+// app.get('/menu', async (req, res) => {
+//   const result = await menu.find({}).toArray();
+//   res.send(result);
+// });
+
+// app.delete("/menu/:id", async (req, res) => {
+//   const result = await menu.deleteOne({
+//     _id: new ObjectId(req.params.id),
+//   });
+
+//   res.send(result);
+// });
 
 app.listen(port, () => {
   console.log(`Example app listening on port ${port}`);
