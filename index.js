@@ -47,6 +47,27 @@ app.get('/menu', async (req, res) => {
   res.send(result);
 });
 
+app.get("/menu/:id", async (req, res) => {
+  const result = await menu.findOne({
+    _id: new ObjectId(req.params.id),
+  });
+
+  res.send(result);
+});
+
+// app.put("/menu/:id", async (req, res) => {
+//   const result = await menu.updateOne(
+//     {
+//       _id: new ObjectId(req.params.id),
+//     },
+//     {
+//       $set: req.body,
+//     }
+//   );
+
+//   res.send(result);
+// });
+
 app.delete("/menu/:id", async (req, res) => {
   const result = await menu.deleteOne({
     _id: new ObjectId(req.params.id),
