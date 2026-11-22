@@ -4,7 +4,7 @@ import { MongoClient, ObjectId } from 'mongodb';
 import 'dotenv/config'
 
 const app = express();
-const port =process.env.Port || 5000;
+const port = process.env.Port || 5000;
 
 app.use(express.json());
 app.use(cors());
@@ -36,7 +36,7 @@ app.get('/users', async (req, res) => {
   res.send(result);
 })
 
-app.post('/menu',async (req, res) =>{
+app.post('/menu', async (req, res) => {
   const menuItem = req.body;
   const result = await menu.insertOne(menuItem);
   res.send(result)
@@ -55,18 +55,18 @@ app.get("/menu/:id", async (req, res) => {
   res.send(result);
 });
 
-// app.put("/menu/:id", async (req, res) => {
-//   const result = await menu.updateOne(
-//     {
-//       _id: new ObjectId(req.params.id),
-//     },
-//     {
-//       $set: req.body,
-//     }
-//   );
+app.put("/menu/:id", async (req, res) => {
+  const result = await menu.updateOne(
+    {
+      _id: new ObjectId(req.params.id),
+    },
+    {
+      $set: req.body,
+    }
+  );
 
-//   res.send(result);
-// });
+  res.send(result);
+});
 
 app.delete("/menu/:id", async (req, res) => {
   const result = await menu.deleteOne({
