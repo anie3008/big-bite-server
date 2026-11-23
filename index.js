@@ -25,14 +25,16 @@ const connectedClient = await connectToMongoDB();
 const database = connectedClient.db("bigbitedb");
 const users = database.collection("user")
 const menu = database.collection("menu")
+const orders = database.collection("orders")
 
 app.get('/', (req, res) => {
   res.send('Hello World!');
 });
 
-app.get('/users', async (req, res) => {
-  const cursor = users.find({});
-  const result = await cursor.toArray();
+app.get('/users/:id', async (req, res) => {
+  const result = await users.findOne({
+    _id: new ObjectId(req.params.id),
+  });
   res.send(result);
 })
 
@@ -44,6 +46,11 @@ app.post('/menu', async (req, res) => {
 
 app.get('/menu', async (req, res) => {
   const result = await menu.find({}).toArray();
+  res.send(result);
+});
+
+app.get('/menu/available', async (req, res) => {
+  const result = await menu.find({status: "approved", isActive: true}).toArray();
   res.send(result);
 });
 
@@ -75,6 +82,12 @@ app.delete("/menu/:id", async (req, res) => {
 
   res.send(result);
 });
+
+app.post("/orders",async (req, res) => {
+  const order = req.body;
+  const result = await orders.insertOne(order)
+  res.send(result);
+})
 
 app.listen(port, () => {
   console.log(`Example app listening on port ${port}`);
